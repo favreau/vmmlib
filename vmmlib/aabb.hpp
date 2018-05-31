@@ -128,6 +128,15 @@ public:
     /** @return a bounding box of size one with the minimum point at zero. */
     static AABB<T> makeUnitBox();
 
+#ifdef __INTEL_COMPILER
+    // For some reason, ICC does not understand the friend declarations and
+    // generates compilation issues. Making the attributes public is not great
+    // but it still is consistent with the rest of the vmmlib library (Vectors
+    // and Quaternions also expose public class members)
+public:
+    vector<3, T> _min;
+    vector<3, T> _max;
+#else
 private:
     vector<3, T> _min;
     vector<3, T> _max;
@@ -135,6 +144,7 @@ private:
     friend void lunchbox::byteswap(U&);
     friend void staticjson::init(AABB<float>*, staticjson::ObjectHandler*);
     friend void staticjson::init(AABB<double>*, staticjson::ObjectHandler*);
+#endif
 };
 
 template <typename T>
